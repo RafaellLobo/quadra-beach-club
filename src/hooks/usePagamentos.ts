@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
+import { useAsync } from "./useAsync";
 import {
   pagamentosService,
   type RegistrarPagamentoInput,
 } from "@/services/pagamentosService";
-import { DEFAULT_TENANT_ID } from "@/config/app";
+import { useTenantId } from "@/context/TenantContext";
 import type { Pagamento } from "@/types";
 
 export interface UsePagamentosResult {
@@ -17,50 +18,36 @@ export interface UsePagamentosResult {
   marcarComoPago: (id: string) => Promise<void>;
 }
 
+/**
+ * Reads use the shared useAsync contract; mutations refetch on success
+ * so local state stays consistent with server ordering and derived fields.
+ */
 export function usePagamentos(): UsePagamentosResult {
-  const [data, setData] = useState<Pagamento[] | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await pagamentosService.list({
-        tenant_id: DEFAULT_TENANT_ID,
-      });
-      setData(res);
-    } catch (e) {
-      setError(e instanceof Error ? e : new Error(String(e)));
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    void load();
-  }, [load]);
+  const tenantId = useTenantId();
+  const { data, loading, error, refetch } = useAsync(
+    () => pagamentosService.list({ tenant_id: tenantId }),
+    [tenantId],
+  );
 
   const registrar = useCallback(
     async (input: Omit<RegistrarPagamentoInput, "tenant_id">) => {
       const novo = await pagamentosService.registrar({
         ...input,
-        tenant_id: DEFAULT_TENANT_ID,
+        tenant_id: tenantId,
       });
-      setData((prev) => (prev ? [novo, ...prev] : [novo]));
+      await refetch();
       return novo;
     },
-    [],
+    [tenantId, refetch],
   );
 
-  const marcarComoPago = useCallback(async (id: string) => {
-    const updated = await pagamentosService.marcarComoPago(id);
-    if (updated) {
-      setData((prev) =>
-        prev ? prev.map((p) => (p.id === id ? updated : p)) : prev,
-      );
-    }
-  }, []);
+  const marcarComoPago = useCallback(
+    async (id: string) => {
+      await pagamentosService.marcarComoPago(id);
+      await refetch();
+    },
+    [refetch],
+  );
 
-  return { data, loading, error, refetch: load, registrar, marcarComoPago };
+  return { data, loading, error, refetch, registrar, marcarComoPago };
 }
