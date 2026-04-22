@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
+import { useAsync } from "./useAsync";
 import { turmasService, type TurmaInput } from "@/services/turmasService";
-import { DEFAULT_TENANT_ID } from "@/config/app";
+import { useTenantId } from "@/context/TenantContext";
 import type { Turma } from "@/types";
 
 export interface UseTurmasResult {
@@ -16,60 +17,44 @@ export interface UseTurmasResult {
   remove: (id: string) => Promise<boolean>;
 }
 
+/**
+ * Reads use the shared useAsync contract; mutations are thin wrappers
+ * that refetch on success to stay aligned with server truth (avoids the
+ * stale-closure / ordering drift of manual setData patches).
+ */
 export function useTurmas(): UseTurmasResult {
-  const [data, setData] = useState<Turma[] | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await turmasService.list({ tenant_id: DEFAULT_TENANT_ID });
-      setData(res);
-    } catch (e) {
-      setError(e instanceof Error ? e : new Error(String(e)));
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    void load();
-  }, [load]);
+  const tenantId = useTenantId();
+  const { data, loading, error, refetch } = useAsync(
+    () => turmasService.list({ tenant_id: tenantId }),
+    [tenantId],
+  );
 
   const create = useCallback(
     async (input: Omit<TurmaInput, "tenant_id">) => {
-      const nova = await turmasService.create({
-        ...input,
-        tenant_id: DEFAULT_TENANT_ID,
-      });
-      setData((prev) => (prev ? [...prev, nova] : [nova]));
+      const nova = await turmasService.create({ ...input, tenant_id: tenantId });
+      await refetch();
       return nova;
     },
-    [],
+    [tenantId, refetch],
   );
 
   const update = useCallback(
     async (id: string, input: Omit<TurmaInput, "tenant_id">) => {
       const updated = await turmasService.update(id, input);
-      if (updated) {
-        setData((prev) =>
-          prev ? prev.map((t) => (t.id === id ? updated : t)) : prev,
-        );
-      }
+      await refetch();
       return updated;
     },
-    [],
+    [refetch],
   );
 
-  const remove = useCallback(async (id: string) => {
-    const ok = await turmasService.remove(id);
-    if (ok) {
-      setData((prev) => (prev ? prev.filter((t) => t.id !== id) : prev));
-    }
-    return ok;
-  }, []);
+  const remove = useCallback(
+    async (id: string) => {
+      const ok = await turmasService.remove(id);
+      if (ok) await refetch();
+      return ok;
+    },
+    [refetch],
+  );
 
-  return { data, loading, error, refetch: load, create, update, remove };
+  return { data, loading, error, refetch, create, update, remove };
 }
