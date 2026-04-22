@@ -145,9 +145,9 @@ export function DashboardPage() {
                       fontSize: 12,
                       color: "var(--popover-foreground)",
                     }}
-                    formatter={(value: number, name) => [
-                      formatCurrency(value),
-                      labelForKey(name as string),
+                    formatter={(value, name) => [
+                      formatCurrency(Number(value ?? 0)),
+                      labelForKey(String(name)),
                     ]}
                   />
                   <Bar dataKey="recebido" fill="var(--success)" radius={[6, 6, 0, 0]} />
