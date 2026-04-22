@@ -9,104 +9,133 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TurmasRouteImport } from './routes/turmas'
-import { Route as FinanceiroRouteImport } from './routes/financeiro'
-import { Route as AlunosRouteImport } from './routes/alunos'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppRouteImport } from './routes/_app'
+import { Route as AppIndexRouteImport } from './routes/_app.index'
+import { Route as AppTurmasRouteImport } from './routes/_app.turmas'
+import { Route as AppFinanceiroRouteImport } from './routes/_app.financeiro'
+import { Route as AppAlunosRouteImport } from './routes/_app.alunos'
 
-const TurmasRoute = TurmasRouteImport.update({
-  id: '/turmas',
-  path: '/turmas',
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
   getParentRoute: () => rootRouteImport,
 } as any)
-const FinanceiroRoute = FinanceiroRouteImport.update({
-  id: '/financeiro',
-  path: '/financeiro',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AlunosRoute = AlunosRouteImport.update({
-  id: '/alunos',
-  path: '/alunos',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IndexRoute = IndexRouteImport.update({
+const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTurmasRoute = AppTurmasRouteImport.update({
+  id: '/turmas',
+  path: '/turmas',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFinanceiroRoute = AppFinanceiroRouteImport.update({
+  id: '/financeiro',
+  path: '/financeiro',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAlunosRoute = AppAlunosRouteImport.update({
+  id: '/alunos',
+  path: '/alunos',
+  getParentRoute: () => AppRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/alunos': typeof AlunosRoute
-  '/financeiro': typeof FinanceiroRoute
-  '/turmas': typeof TurmasRoute
+  '/': typeof AppIndexRoute
+  '/alunos': typeof AppAlunosRoute
+  '/financeiro': typeof AppFinanceiroRoute
+  '/turmas': typeof AppTurmasRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/alunos': typeof AlunosRoute
-  '/financeiro': typeof FinanceiroRoute
-  '/turmas': typeof TurmasRoute
+  '/alunos': typeof AppAlunosRoute
+  '/financeiro': typeof AppFinanceiroRoute
+  '/turmas': typeof AppTurmasRoute
+  '/': typeof AppIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/alunos': typeof AlunosRoute
-  '/financeiro': typeof FinanceiroRoute
-  '/turmas': typeof TurmasRoute
+  '/_app': typeof AppRouteWithChildren
+  '/_app/alunos': typeof AppAlunosRoute
+  '/_app/financeiro': typeof AppFinanceiroRoute
+  '/_app/turmas': typeof AppTurmasRoute
+  '/_app/': typeof AppIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths: '/' | '/alunos' | '/financeiro' | '/turmas'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/alunos' | '/financeiro' | '/turmas'
-  id: '__root__' | '/' | '/alunos' | '/financeiro' | '/turmas'
+  to: '/alunos' | '/financeiro' | '/turmas' | '/'
+  id:
+    | '__root__'
+    | '/_app'
+    | '/_app/alunos'
+    | '/_app/financeiro'
+    | '/_app/turmas'
+    | '/_app/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AlunosRoute: typeof AlunosRoute
-  FinanceiroRoute: typeof FinanceiroRoute
-  TurmasRoute: typeof TurmasRoute
+  AppRoute: typeof AppRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/turmas': {
-      id: '/turmas'
-      path: '/turmas'
-      fullPath: '/turmas'
-      preLoaderRoute: typeof TurmasRouteImport
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/financeiro': {
-      id: '/financeiro'
-      path: '/financeiro'
-      fullPath: '/financeiro'
-      preLoaderRoute: typeof FinanceiroRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/alunos': {
-      id: '/alunos'
-      path: '/alunos'
-      fullPath: '/alunos'
-      preLoaderRoute: typeof AlunosRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
+    '/_app/': {
+      id: '/_app/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/turmas': {
+      id: '/_app/turmas'
+      path: '/turmas'
+      fullPath: '/turmas'
+      preLoaderRoute: typeof AppTurmasRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/financeiro': {
+      id: '/_app/financeiro'
+      path: '/financeiro'
+      fullPath: '/financeiro'
+      preLoaderRoute: typeof AppFinanceiroRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/alunos': {
+      id: '/_app/alunos'
+      path: '/alunos'
+      fullPath: '/alunos'
+      preLoaderRoute: typeof AppAlunosRouteImport
+      parentRoute: typeof AppRoute
     }
   }
 }
 
+interface AppRouteChildren {
+  AppAlunosRoute: typeof AppAlunosRoute
+  AppFinanceiroRoute: typeof AppFinanceiroRoute
+  AppTurmasRoute: typeof AppTurmasRoute
+  AppIndexRoute: typeof AppIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppAlunosRoute: AppAlunosRoute,
+  AppFinanceiroRoute: AppFinanceiroRoute,
+  AppTurmasRoute: AppTurmasRoute,
+  AppIndexRoute: AppIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  AlunosRoute: AlunosRoute,
-  FinanceiroRoute: FinanceiroRoute,
-  TurmasRoute: TurmasRoute,
+  AppRoute: AppRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
