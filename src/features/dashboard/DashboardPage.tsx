@@ -182,7 +182,7 @@ export function DashboardPage() {
                     fontSize: 12,
                   }}
                   labelStyle={{ color: "var(--muted-foreground)" }}
-                  formatter={(v: number) => [formatCurrency(v), "Receita"]}
+                  formatter={(v) => [formatCurrency(Number(v)), "Receita"]}
                 />
                 <Area
                   type="monotone"
