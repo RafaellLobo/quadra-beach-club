@@ -202,6 +202,24 @@ export function FinanceiroPage() {
     },
   ];
 
+  if (error && !loading) {
+    return (
+      <div className="space-y-5">
+        <PageHeader
+          title="Financeiro"
+          description="Acompanhe mensalidades, pagamentos avulsos e totais por período."
+        />
+        <ErrorState
+          title="Não foi possível carregar o financeiro"
+          description={error.message}
+          onRetry={async () => {
+            await Promise.all([alunos.refetch(), pagamentos.refetch()]);
+          }}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-5">
       <PageHeader
