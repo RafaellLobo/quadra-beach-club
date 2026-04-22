@@ -23,7 +23,7 @@ const nav: Array<{
   { to: "/turmas", label: "Turmas", icon: CalendarRange },
 ];
 
-export function AppShell() {
+export function AppShell({ children }: { children: ReactNode }) {
   const { location } = useRouterState();
   const path = location.pathname;
 
@@ -95,7 +95,7 @@ export function AppShell() {
         </header>
 
         <main className="flex-1 p-4 md:p-8">
-          <Outlet />
+          {children}
         </main>
       </div>
     </div>
