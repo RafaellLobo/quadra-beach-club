@@ -12,6 +12,7 @@ import {
 
 import { PageHeader } from "@/components/common/PageHeader";
 import { MetricCard } from "@/components/common/MetricCard";
+import { ErrorState } from "@/components/common/ErrorState";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAlunos } from "@/hooks/useAlunos";
 import { usePagamentos } from "@/hooks/usePagamentos";
@@ -25,7 +26,12 @@ export function DashboardPage() {
   const pagamentos = usePagamentos();
 
   const loading = alunos.loading || turmas.loading || pagamentos.loading;
+  const error = alunos.error ?? turmas.error ?? pagamentos.error;
   const pags = pagamentos.data ?? [];
+
+  const retryAll = async () => {
+    await Promise.all([alunos.refetch(), turmas.refetch(), pagamentos.refetch()]);
+  };
 
   const { receitaPrevista, receitaRecebida, receitaPendente, receitaAtrasada } =
     useMemo(() => {
