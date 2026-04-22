@@ -10,12 +10,17 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
-const nav = [
+const nav: Array<{
+  to: string;
+  label: string;
+  icon: typeof LayoutDashboard;
+  exact?: boolean;
+}> = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { to: "/alunos", label: "Alunos", icon: Users },
   { to: "/financeiro", label: "Financeiro", icon: Wallet },
   { to: "/turmas", label: "Turmas", icon: CalendarRange },
-] as const;
+];
 
 export function AppShell() {
   const { location } = useRouterState();
