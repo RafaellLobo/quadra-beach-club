@@ -4,6 +4,7 @@ import { toast } from "sonner";
 
 import { PageHeader } from "@/components/common/PageHeader";
 import { EmptyState } from "@/components/common/EmptyState";
+import { ErrorState } from "@/components/common/ErrorState";
 import { DataTable, type DataTableColumn } from "@/components/common/DataTable";
 import { Modal } from "@/components/common/Modal";
 import { Button } from "@/components/ui/button";
@@ -32,7 +33,7 @@ interface FormState {
 const EMPTY_FORM: FormState = { nome: "", horario: "", valor_mensalidade: "" };
 
 export function TurmasPage() {
-  const { data, loading, error, create, update, remove } = useTurmas();
+  const { data, loading, error, refetch, create, update, remove } = useTurmas();
 
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<Turma | null>(null);
@@ -162,11 +163,13 @@ export function TurmasPage() {
 
   if (error) {
     return (
-      <div>
+      <div className="space-y-5">
         <PageHeader title="Turmas" description="Gestão das turmas do clube." />
-        <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-6 text-sm text-destructive">
-          Erro ao carregar turmas: {error.message}
-        </div>
+        <ErrorState
+          title="Não foi possível carregar as turmas"
+          description={error.message}
+          onRetry={refetch}
+        />
       </div>
     );
   }
