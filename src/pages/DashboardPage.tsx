@@ -58,6 +58,19 @@ export function DashboardPage() {
   const taxaRecebimento =
     receitaPrevista > 0 ? Math.round((receitaRecebida / receitaPrevista) * 100) : 0;
 
+  if (error && !loading) {
+    return (
+      <div className="space-y-6">
+        <PageHeader title="Dashboard" description="Visão geral do desempenho do seu clube." />
+        <ErrorState
+          title="Não foi possível carregar o dashboard"
+          description={error.message}
+          onRetry={retryAll}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <PageHeader
