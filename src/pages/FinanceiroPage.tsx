@@ -11,6 +11,7 @@ import { toast } from "sonner";
 
 import { PageHeader } from "@/components/common/PageHeader";
 import { MetricCard } from "@/components/common/MetricCard";
+import { ErrorState } from "@/components/common/ErrorState";
 import { DataTable, type DataTableColumn } from "@/components/common/DataTable";
 import { StatusBadge } from "@/components/common/StatusBadge";
 import { FilterSelect } from "@/components/common/FilterSelect";
@@ -66,6 +67,7 @@ export function FinanceiroPage() {
   const [modalOpen, setModalOpen] = useState(false);
 
   const loading = alunos.loading || pagamentos.loading;
+  const error = alunos.error ?? pagamentos.error;
 
   const alunosById = useMemo(() => {
     const map = new Map<string, Aluno>();
