@@ -1,5 +1,5 @@
 import type { Pagamento, PagamentoStatus, PagamentoTipo } from "@/types";
-import { simulateLatency, type ListParams } from "./apiClient";
+import { maybeFail, simulateLatency, type ListParams } from "./apiClient";
 import { mockDB } from "./mockData";
 
 export interface RegistrarPagamentoInput {
@@ -16,6 +16,7 @@ const uid = (p: string) => `${p}_${Math.random().toString(36).slice(2, 10)}`;
 export const pagamentosService = {
   async list({ tenant_id }: ListParams): Promise<Pagamento[]> {
     await simulateLatency();
+    maybeFail("pagamentos.list");
     return mockDB.pagamentos.filter((p) => p.tenant_id === tenant_id);
   },
 
