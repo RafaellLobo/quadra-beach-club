@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 /**
  * Minimal async state hook. Keeps UI free of fetching boilerplate and
@@ -9,40 +9,55 @@ export interface AsyncState<T> {
   data: T | null;
   loading: boolean;
   error: Error | null;
+  refetch: () => Promise<void>;
 }
 
 export function useAsync<T>(
   fn: () => Promise<T>,
   deps: ReadonlyArray<unknown> = [],
 ): AsyncState<T> {
-  const [state, setState] = useState<AsyncState<T>>({
-    data: null,
-    loading: true,
-    error: null,
-  });
+  const [data, setData] = useState<T | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  const run = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fn();
+      setData(res);
+    } catch (e) {
+      setData(null);
+      setError(e instanceof Error ? e : new Error(String(e)));
+    } finally {
+      setLoading(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, deps);
 
   useEffect(() => {
     let cancelled = false;
-    setState((s) => ({ ...s, loading: true, error: null }));
-
+    setLoading(true);
+    setError(null);
     fn()
-      .then((data) => {
-        if (!cancelled) setState({ data, loading: false, error: null });
+      .then((res) => {
+        if (!cancelled) {
+          setData(res);
+          setLoading(false);
+        }
       })
-      .catch((error: unknown) => {
-        if (!cancelled)
-          setState({
-            data: null,
-            loading: false,
-            error: error instanceof Error ? error : new Error(String(error)),
-          });
+      .catch((e: unknown) => {
+        if (!cancelled) {
+          setData(null);
+          setError(e instanceof Error ? e : new Error(String(e)));
+          setLoading(false);
+        }
       });
-
     return () => {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 
-  return state;
+  return { data, loading, error, refetch: run };
 }

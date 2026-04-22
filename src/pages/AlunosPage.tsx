@@ -3,6 +3,7 @@ import { Search, Users } from "lucide-react";
 
 import { PageHeader } from "@/components/common/PageHeader";
 import { EmptyState } from "@/components/common/EmptyState";
+import { ErrorState } from "@/components/common/ErrorState";
 import { DataTable, type DataTableColumn } from "@/components/common/DataTable";
 import { StatusBadge, type StudentStatus } from "@/components/common/StatusBadge";
 import { FilterSelect } from "@/components/common/FilterSelect";
@@ -124,11 +125,15 @@ export function AlunosPage() {
 
   if (error) {
     return (
-      <div>
+      <div className="space-y-5">
         <PageHeader title="Alunos" description="Gestão de alunos do clube." />
-        <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-6 text-sm text-destructive">
-          Erro ao carregar alunos: {error.message}
-        </div>
+        <ErrorState
+          title="Não foi possível carregar os alunos"
+          description={error.message}
+          onRetry={async () => {
+            await Promise.all([alunos.refetch(), turmas.refetch(), pagamentos.refetch()]);
+          }}
+        />
       </div>
     );
   }
