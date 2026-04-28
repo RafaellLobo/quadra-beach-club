@@ -29,8 +29,7 @@ export const pagamentosService = {
       valor: input.valor,
       status: input.status,
       data_vencimento: input.data_vencimento,
-      data_pagamento:
-        input.status === "pago" ? new Date().toISOString() : undefined,
+      data_pagamento: input.status === "pago" ? new Date().toISOString() : undefined,
       tenant_id: input.tenant_id,
       created_at: new Date().toISOString(),
     };

@@ -1,12 +1,5 @@
 import { useMemo, useState } from "react";
-import {
-  CircleDollarSign,
-  Clock,
-  AlertTriangle,
-  Wallet,
-  Plus,
-  CheckCircle2,
-} from "lucide-react";
+import { CircleDollarSign, Clock, AlertTriangle, Wallet, Plus, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { PageHeader } from "@/components/common/PageHeader";
@@ -30,12 +23,7 @@ import {
 import { useAlunos } from "@/hooks/useAlunos";
 import { usePagamentos } from "@/hooks/usePagamentos";
 import { formatCurrency, formatDate } from "@/lib/format";
-import type {
-  Aluno,
-  Pagamento,
-  PagamentoStatus,
-  PagamentoTipo,
-} from "@/types";
+import type { Aluno, Pagamento, PagamentoStatus, PagamentoTipo } from "@/types";
 
 interface PagamentoRow extends Pagamento {
   alunoNome: string;
@@ -76,12 +64,11 @@ export function FinanceiroPage() {
   }, [alunos.data]);
 
   const anosDisponiveis = useMemo(() => {
-    const set = new Set<number>([now.getFullYear()]);
-    (pagamentos.data ?? []).forEach((p) =>
-      set.add(new Date(p.data_vencimento).getFullYear()),
-    );
+    const currentYear = new Date().getFullYear();
+    const set = new Set<number>([currentYear]);
+    (pagamentos.data ?? []).forEach((p) => set.add(new Date(p.data_vencimento).getFullYear()));
     return Array.from(set).sort((a, b) => b - a);
-  }, [pagamentos.data, now]);
+  }, [pagamentos.data]);
 
   const rows: PagamentoRow[] = useMemo(() => {
     const mesNum = mes === "todos" ? null : Number(mes);
@@ -99,9 +86,7 @@ export function FinanceiroPage() {
         alunoNome: alunosById.get(p.aluno_id)?.nome ?? "—",
       }))
       .sort(
-        (a, b) =>
-          new Date(b.data_vencimento).getTime() -
-          new Date(a.data_vencimento).getTime(),
+        (a, b) => new Date(b.data_vencimento).getTime() - new Date(a.data_vencimento).getTime(),
       );
   }, [pagamentos.data, alunosById, mes, ano, tipo]);
 
@@ -136,35 +121,25 @@ export function FinanceiroPage() {
     {
       key: "aluno",
       header: "Aluno",
-      cell: (row) => (
-        <span className="font-medium text-foreground">{row.alunoNome}</span>
-      ),
+      cell: (row) => <span className="font-medium text-foreground">{row.alunoNome}</span>,
     },
     {
       key: "tipo",
       header: "Tipo",
-      cell: (row) => (
-        <span className="capitalize text-muted-foreground">{row.tipo}</span>
-      ),
+      cell: (row) => <span className="capitalize text-muted-foreground">{row.tipo}</span>,
     },
     {
       key: "vencimento",
       header: "Vencimento",
       cell: (row) => (
-        <span className="text-muted-foreground">
-          {formatDate(row.data_vencimento)}
-        </span>
+        <span className="text-muted-foreground">{formatDate(row.data_vencimento)}</span>
       ),
     },
     {
       key: "valor",
       header: "Valor",
       align: "right",
-      cell: (row) => (
-        <span className="font-medium tabular-nums">
-          {formatCurrency(row.valor)}
-        </span>
-      ),
+      cell: (row) => <span className="font-medium tabular-nums">{formatCurrency(row.valor)}</span>,
     },
     {
       key: "status",
@@ -382,11 +357,7 @@ function RegistrarPagamentoModal({
       description="Adicione um novo lançamento financeiro ao período."
       footer={
         <>
-          <Button
-            variant="ghost"
-            onClick={() => onOpenChange(false)}
-            disabled={submitting}
-          >
+          <Button variant="ghost" onClick={() => onOpenChange(false)} disabled={submitting}>
             Cancelar
           </Button>
           <Button onClick={handleSubmit} disabled={submitting}>
@@ -415,10 +386,7 @@ function RegistrarPagamentoModal({
         <div className="grid grid-cols-2 gap-3">
           <div className="grid gap-1.5">
             <Label htmlFor="tipo">Tipo</Label>
-            <Select
-              value={tipo}
-              onValueChange={(v) => setTipo(v as PagamentoTipo)}
-            >
+            <Select value={tipo} onValueChange={(v) => setTipo(v as PagamentoTipo)}>
               <SelectTrigger id="tipo">
                 <SelectValue />
               </SelectTrigger>
@@ -431,10 +399,7 @@ function RegistrarPagamentoModal({
 
           <div className="grid gap-1.5">
             <Label htmlFor="status">Status</Label>
-            <Select
-              value={status}
-              onValueChange={(v) => setStatus(v as PagamentoStatus)}
-            >
+            <Select value={status} onValueChange={(v) => setStatus(v as PagamentoStatus)}>
               <SelectTrigger id="status">
                 <SelectValue />
               </SelectTrigger>

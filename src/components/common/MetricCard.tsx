@@ -39,9 +39,7 @@ export function MetricCard({
                 </span>
               )}
             </div>
-            {hint && !loading && (
-              <p className="mt-1 text-xs text-muted-foreground">{hint}</p>
-            )}
+            {hint && !loading && <p className="mt-1 text-xs text-muted-foreground">{hint}</p>}
             {trend && !loading && (
               <p
                 className={cn(

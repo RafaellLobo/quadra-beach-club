@@ -13,9 +13,7 @@ export function Sidebar() {
 
       <nav className="flex-1 space-y-1 p-3">
         {mainNavigation.map((item) => {
-          const active = item.exact
-            ? path === item.to
-            : path.startsWith(item.to);
+          const active = item.exact ? path === item.to : path.startsWith(item.to);
           const Icon = item.icon;
           return (
             <Link

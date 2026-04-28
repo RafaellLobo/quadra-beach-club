@@ -1,10 +1,4 @@
-import {
-  LayoutDashboard,
-  Users,
-  Wallet,
-  CalendarRange,
-  type LucideIcon,
-} from "lucide-react";
+import { LayoutDashboard, Users, Wallet, CalendarRange, type LucideIcon } from "lucide-react";
 
 export interface NavItem {
   to: string;

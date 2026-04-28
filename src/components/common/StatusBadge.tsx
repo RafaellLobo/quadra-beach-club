@@ -5,10 +5,7 @@ export type PaymentStatus = "pago" | "pendente" | "atrasado";
 export type StudentStatus = "em_dia" | "pendente" | "atrasado";
 export type StatusKind = PaymentStatus | StudentStatus | "ativo" | "inativo";
 
-const STATUS_MAP: Record<
-  StatusKind,
-  { label: string; className: string; dot: string }
-> = {
+const STATUS_MAP: Record<StatusKind, { label: string; className: string; dot: string }> = {
   pago: {
     label: "Pago",
     className:
@@ -29,8 +26,7 @@ const STATUS_MAP: Record<
   },
   atrasado: {
     label: "Atrasado",
-    className:
-      "bg-destructive/15 text-destructive border-destructive/30",
+    className: "bg-destructive/15 text-destructive border-destructive/30",
     dot: "bg-destructive",
   },
   ativo: {

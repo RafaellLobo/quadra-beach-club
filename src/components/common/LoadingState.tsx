@@ -12,11 +12,7 @@ interface Props {
  * Standardized loading affordance for sections without table/skeleton coverage.
  * Use inside Cards or wrappers when there is no skeleton variant available.
  */
-export function LoadingState({
-  label = "Carregando...",
-  className,
-  variant = "section",
-}: Props) {
+export function LoadingState({ label = "Carregando...", className, variant = "section" }: Props) {
   if (variant === "inline") {
     return <Spinner className={className} label={label} size="sm" />;
   }

@@ -1,14 +1,6 @@
 import { useMemo } from "react";
 import { Users, CalendarRange, TrendingUp, Wallet } from "lucide-react";
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import { PageHeader } from "@/components/common/PageHeader";
 import { MetricCard } from "@/components/common/MetricCard";
@@ -33,25 +25,24 @@ export function DashboardPage() {
     await Promise.all([alunos.refetch(), turmas.refetch(), pagamentos.refetch()]);
   };
 
-  const { receitaPrevista, receitaRecebida, receitaPendente, receitaAtrasada } =
-    useMemo(() => {
-      let prevista = 0;
-      let recebida = 0;
-      let pendente = 0;
-      let atrasada = 0;
-      for (const p of pags) {
-        prevista += p.valor;
-        if (p.status === "pago") recebida += p.valor;
-        else if (p.status === "pendente") pendente += p.valor;
-        else if (p.status === "atrasado") atrasada += p.valor;
-      }
-      return {
-        receitaPrevista: prevista,
-        receitaRecebida: recebida,
-        receitaPendente: pendente,
-        receitaAtrasada: atrasada,
-      };
-    }, [pags]);
+  const { receitaPrevista, receitaRecebida, receitaPendente, receitaAtrasada } = useMemo(() => {
+    let prevista = 0;
+    let recebida = 0;
+    let pendente = 0;
+    let atrasada = 0;
+    for (const p of pags) {
+      prevista += p.valor;
+      if (p.status === "pago") recebida += p.valor;
+      else if (p.status === "pendente") pendente += p.valor;
+      else if (p.status === "atrasado") atrasada += p.valor;
+    }
+    return {
+      receitaPrevista: prevista,
+      receitaRecebida: recebida,
+      receitaPendente: pendente,
+      receitaAtrasada: atrasada,
+    };
+  }, [pags]);
 
   const chartData = useMemo(() => buildMonthlyChart(pags), [pags]);
 
@@ -73,10 +64,7 @@ export function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Dashboard"
-        description="Visão geral do desempenho do seu clube."
-      />
+      <PageHeader title="Dashboard" description="Visão geral do desempenho do seu clube." />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <MetricCard
@@ -134,11 +122,7 @@ export function DashboardPage() {
             <div className="h-72 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData} barGap={6} barCategoryGap={24}>
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    stroke="var(--border)"
-                    vertical={false}
-                  />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
                   <XAxis
                     dataKey="month"
                     stroke="var(--muted-foreground)"
@@ -180,21 +164,9 @@ export function DashboardPage() {
       </Card>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <SummaryRow
-          label="Recebido"
-          value={receitaRecebida}
-          accent="var(--success)"
-        />
-        <SummaryRow
-          label="Pendente"
-          value={receitaPendente}
-          accent="var(--warning)"
-        />
-        <SummaryRow
-          label="Atrasado"
-          value={receitaAtrasada}
-          accent="var(--destructive)"
-        />
+        <SummaryRow label="Recebido" value={receitaRecebida} accent="var(--success)" />
+        <SummaryRow label="Pendente" value={receitaPendente} accent="var(--warning)" />
+        <SummaryRow label="Atrasado" value={receitaAtrasada} accent="var(--destructive)" />
       </div>
     </div>
   );
@@ -217,10 +189,7 @@ function ChartLegend() {
     <div className="flex flex-wrap items-center gap-4">
       {items.map((i) => (
         <div key={i.label} className="flex items-center gap-2 text-xs text-muted-foreground">
-          <span
-            className="h-2.5 w-2.5 rounded-sm"
-            style={{ backgroundColor: i.color }}
-          />
+          <span className="h-2.5 w-2.5 rounded-sm" style={{ backgroundColor: i.color }} />
           {i.label}
         </div>
       ))}
@@ -228,15 +197,7 @@ function ChartLegend() {
   );
 }
 
-function SummaryRow({
-  label,
-  value,
-  accent,
-}: {
-  label: string;
-  value: number;
-  accent: string;
-}) {
+function SummaryRow({ label, value, accent }: { label: string; value: number; accent: string }) {
   return (
     <Card>
       <CardContent className="flex items-center justify-between p-5">
@@ -255,7 +216,14 @@ function SummaryRow({
 function buildMonthlyChart(pagamentos: Pagamento[]) {
   // Build 6 month buckets ending at current month
   const now = new Date();
-  const buckets: { key: string; date: Date; month: string; recebido: number; pendente: number; atrasado: number }[] = [];
+  const buckets: {
+    key: string;
+    date: Date;
+    month: string;
+    recebido: number;
+    pendente: number;
+    atrasado: number;
+  }[] = [];
   for (let i = 5; i >= 0; i--) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
     buckets.push({

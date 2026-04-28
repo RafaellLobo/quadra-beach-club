@@ -27,9 +27,7 @@ export function TenantProvider({ children, tenantId }: TenantProviderProps) {
     () => ({ tenantId: tenantId ?? DEFAULT_TENANT_ID }),
     [tenantId],
   );
-  return (
-    <TenantContext.Provider value={value}>{children}</TenantContext.Provider>
-  );
+  return <TenantContext.Provider value={value}>{children}</TenantContext.Provider>;
 }
 
 export function useTenantId(): string {

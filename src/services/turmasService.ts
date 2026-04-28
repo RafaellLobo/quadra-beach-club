@@ -32,10 +32,7 @@ export const turmasService = {
     return nova;
   },
 
-  async update(
-    id: string,
-    input: Omit<TurmaInput, "tenant_id">,
-  ): Promise<Turma | null> {
+  async update(id: string, input: Omit<TurmaInput, "tenant_id">): Promise<Turma | null> {
     await simulateLatency();
     const t = mockDB.turmas.find((x) => x.id === id);
     if (!t) return null;

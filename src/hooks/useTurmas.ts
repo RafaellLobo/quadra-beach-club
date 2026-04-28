@@ -10,10 +10,7 @@ export interface UseTurmasResult {
   error: Error | null;
   refetch: () => Promise<void>;
   create: (input: Omit<TurmaInput, "tenant_id">) => Promise<Turma>;
-  update: (
-    id: string,
-    input: Omit<TurmaInput, "tenant_id">,
-  ) => Promise<Turma | null>;
+  update: (id: string, input: Omit<TurmaInput, "tenant_id">) => Promise<Turma | null>;
   remove: (id: string) => Promise<boolean>;
 }
 

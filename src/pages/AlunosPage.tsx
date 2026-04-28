@@ -39,9 +39,7 @@ export function AlunosPage() {
   const error = alunos.error ?? turmas.error ?? pagamentos.error;
 
   const rows: AlunoRow[] = useMemo(() => {
-    const turmasById = new Map<string, Turma>(
-      (turmas.data ?? []).map((t) => [t.id, t]),
-    );
+    const turmasById = new Map<string, Turma>((turmas.data ?? []).map((t) => [t.id, t]));
     const pagsByAluno = new Map<string, Pagamento[]>();
     for (const p of pagamentos.data ?? []) {
       const arr = pagsByAluno.get(p.aluno_id) ?? [];
@@ -93,9 +91,7 @@ export function AlunosPage() {
       cell: (row) => (
         <div className="flex flex-col">
           <span className="font-medium text-foreground">{row.nome}</span>
-          {row.email && (
-            <span className="text-xs text-muted-foreground">{row.email}</span>
-          )}
+          {row.email && <span className="text-xs text-muted-foreground">{row.email}</span>}
         </div>
       ),
     },
@@ -142,10 +138,7 @@ export function AlunosPage() {
 
   return (
     <div className="space-y-5">
-      <PageHeader
-        title="Alunos"
-        description="Gerencie os alunos, turmas e status de pagamento."
-      />
+      <PageHeader title="Alunos" description="Gerencie os alunos, turmas e status de pagamento." />
 
       {isEmpty ? (
         <EmptyState

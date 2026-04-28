@@ -1,9 +1,6 @@
 import { useCallback } from "react";
 import { useAsync } from "./useAsync";
-import {
-  pagamentosService,
-  type RegistrarPagamentoInput,
-} from "@/services/pagamentosService";
+import { pagamentosService, type RegistrarPagamentoInput } from "@/services/pagamentosService";
 import { useTenantId } from "@/context/TenantContext";
 import type { Pagamento } from "@/types";
 
@@ -12,9 +9,7 @@ export interface UsePagamentosResult {
   loading: boolean;
   error: Error | null;
   refetch: () => Promise<void>;
-  registrar: (
-    input: Omit<RegistrarPagamentoInput, "tenant_id">,
-  ) => Promise<Pagamento>;
+  registrar: (input: Omit<RegistrarPagamentoInput, "tenant_id">) => Promise<Pagamento>;
   marcarComoPago: (id: string) => Promise<void>;
 }
 

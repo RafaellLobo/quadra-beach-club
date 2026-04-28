@@ -113,9 +113,7 @@ export function TurmasPage() {
     {
       key: "nome",
       header: "Nome",
-      cell: (row) => (
-        <span className="font-medium text-foreground">{row.nome}</span>
-      ),
+      cell: (row) => <span className="font-medium text-foreground">{row.nome}</span>,
     },
     {
       key: "horario",
@@ -127,9 +125,7 @@ export function TurmasPage() {
       header: "Mensalidade",
       align: "right",
       cell: (row) => (
-        <span className="font-medium text-foreground">
-          {formatCurrency(row.valor_mensalidade)}
-        </span>
+        <span className="font-medium text-foreground">{formatCurrency(row.valor_mensalidade)}</span>
       ),
     },
     {
@@ -222,9 +218,7 @@ export function TurmasPage() {
         }}
         title={editing ? "Editar Turma" : "Nova Turma"}
         description={
-          editing
-            ? "Atualize as informações da turma."
-            : "Cadastre uma nova turma no clube."
+          editing ? "Atualize as informações da turma." : "Cadastre uma nova turma no clube."
         }
         footer={
           <>
@@ -236,25 +230,13 @@ export function TurmasPage() {
             >
               Cancelar
             </Button>
-            <Button
-              type="submit"
-              form="turma-form"
-              disabled={submitting}
-            >
-              {submitting
-                ? "Salvando..."
-                : editing
-                  ? "Salvar alterações"
-                  : "Criar turma"}
+            <Button type="submit" form="turma-form" disabled={submitting}>
+              {submitting ? "Salvando..." : editing ? "Salvar alterações" : "Criar turma"}
             </Button>
           </>
         }
       >
-        <form
-          id="turma-form"
-          onSubmit={handleSubmit}
-          className="space-y-4"
-        >
+        <form id="turma-form" onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1.5">
             <Label htmlFor="turma-nome">Nome</Label>
             <Input
@@ -270,9 +252,7 @@ export function TurmasPage() {
             <Input
               id="turma-horario"
               value={form.horario}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, horario: e.target.value }))
-              }
+              onChange={(e) => setForm((f) => ({ ...f, horario: e.target.value }))}
               placeholder="Ex.: Seg/Qua 07h-08h"
             />
           </div>
@@ -285,19 +265,14 @@ export function TurmasPage() {
               min="0"
               step="0.01"
               value={form.valor_mensalidade}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, valor_mensalidade: e.target.value }))
-              }
+              onChange={(e) => setForm((f) => ({ ...f, valor_mensalidade: e.target.value }))}
               placeholder="0,00"
             />
           </div>
         </form>
       </Modal>
 
-      <AlertDialog
-        open={toDelete !== null}
-        onOpenChange={(o) => !o && setToDelete(null)}
-      >
+      <AlertDialog open={toDelete !== null} onOpenChange={(o) => !o && setToDelete(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Excluir turma?</AlertDialogTitle>
