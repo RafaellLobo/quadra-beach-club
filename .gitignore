@@ -1,0 +1,16 @@
+node_modules/
+dist/
+dist-ssr/
+.output/
+.tanstack/
+.nitro/
+.wrangler/
+.vscode/
+.idea/
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.log
+.DS_Store
