@@ -32,7 +32,7 @@ def verify_jwt(credentials: HTTPAuthorizationCredentials = Security(security)) -
         if not user_id:
             raise HTTPException(status_code=401, detail="Token sem identificação.")
             
-        return UserContext(user_id=user_id, role=role)
+        return UserContext(user_id=user_id, role=role, token=token)
         
     except jwt.ExpiredSignatureError:
         raise HTTPException(status_code=401, detail="Sessão expirada.")
