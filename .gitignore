@@ -35,3 +35,8 @@ __pycache__/
 *.njsproj
 *.sln
 *.sw?
+
+# Environment files
+.env
+.env.*
+!.env.example
