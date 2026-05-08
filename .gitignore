@@ -40,3 +40,6 @@ __pycache__/
 .env
 .env.*
 !.env.example
+
+# Local database seeds
+supabase/sql/*.local.sql
